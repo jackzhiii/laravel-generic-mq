@@ -20,17 +20,17 @@ class KafkaConnector implements ConnectorInterface
     /**
      * 初始化 Kafka Client 配置
      */
-    protected functon initConf(array $config)
+    protected function initConf(array $config)
     {
-        $conf = new RdKafka\Conf();
+        $conf = new Conf();
 
         if (! isset($config['metadata.broker.list'])) {
             throw new InvalidArgumentException("Kafka config require metadata.broker.list");
         }
 
         // 配置属性
-        collect($config)->except(['driver'])->each(function($attrKey, $attrValue) use ($conf) {
-            $conf->set(string ($attrKey), string ($attrValue));
+        collect($config)->except(['driver'])->each(function($attrValue, $attrKey) use ($conf) {
+            $conf->set((string) $attrKey, $attrValue);
         });
 
         return $conf;

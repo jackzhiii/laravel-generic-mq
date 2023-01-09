@@ -47,7 +47,6 @@ class MqManager
     protected function resolve($name)
     {
         $config = $this->getConfig($name);
-
         return $this->getConnector($config['driver'])
                         ->connect($config)
                         ->setConnectionName($name);
@@ -92,5 +91,15 @@ class MqManager
     public function extend($driver, Closure $resolver)
     {
         return $this->addConnector($driver, $resolver);
+    }
+
+    /**
+     * Get the name of the default queue connection.
+     *
+     * @return string
+     */
+    public function getDefaultDriver()
+    {
+        return $this->app['config']['mq.default'];
     }
 }

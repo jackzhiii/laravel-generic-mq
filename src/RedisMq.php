@@ -4,6 +4,7 @@ namespace Dhf\Mq;
 
 use Dhf\Mq\Contracts\Mq as MqInterface;
 use Illuminate\Contracts\Redis\Factory as Redis;
+use Illuminate\Queue\LuaScripts;
 
 class RedisMq implements MqInterface
 {
@@ -81,4 +82,26 @@ class RedisMq implements MqInterface
 
         return json_decode($payload, true)['id'] ?? null;
     }
+
+    /**
+     * Get the connection for the queue.
+     *
+     * @return \Illuminate\Redis\Connections\Connection
+     */
+    protected function getConnection()
+    {
+        return $this->redis->connection($this->connection);
+    }
+
+    /**
+     * Get the queue or return the default.
+     *
+     * @param  string|null  $queue
+     * @return string
+     */
+    public function getQueue($queue)
+    {
+        return 'queues:'.($queue ?: $this->default);
+    }
+
 }

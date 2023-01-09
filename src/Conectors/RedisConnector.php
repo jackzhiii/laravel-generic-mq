@@ -3,8 +3,10 @@
 namespace Dhf\Mq\Conectors;
 
 use Illuminate\Contracts\Redis\Factory as Redis;
+use Dhf\Mq\RedisMq;
+use Dhf\Mq\Contracts\Connector as ConnectorInterface;
 
-class RedisConnector
+class RedisConnector implements ConnectorInterface
 {
     protected $redis;
 
@@ -18,7 +20,7 @@ class RedisConnector
 
     public function connect(array $config)
     {
-        return new RedisQueue(
+        return new RedisMq(
             $this->redis, $config['queue'],
             $config['connection'] ?? $this->connection,
             $config['retry_after'] ?? 60,

@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Dhf\Mq\Conectors\NullConnector;
 use Dhf\Mq\Conectors\RedisConnector;
+use Dhf\Mq\Conectors\KafkaConnector;
 
 class MqServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -16,8 +17,26 @@ class MqServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function register()
     {
+        $this->registerConfig();
         $this->registerManager();
         $this->registerConnection();
+    }
+
+    protected function registerConfig()
+    {
+        $source = realpath(__DIR__ . '/../config/mq.php');
+        
+        // if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
+        //     $this->publishes([$source => config_path('mq.php')]);
+        // } elseif ($this->app instanceof LumenApplication) {
+        //     $this->app->configure($source, 'mq');
+        // }
+
+        if ($this->app instanceof LumenApplication) {
+            $this->app->configure($source, 'mq');
+        }
+
+        $this->mergeConfigFrom($source, 'mq');
     }
 
     protected function registerManager()

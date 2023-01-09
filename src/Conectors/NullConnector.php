@@ -2,10 +2,13 @@
 
 namespace Dhf\Mq\Conectors;
 
-class NullConnector
+use Dhf\Mq\Contracts\Connector as ConnectorInterface;
+use Dhf\Mq\NullMq;
+
+class NullConnector implements ConnectorInterface
 {
     public function connect(array $config)
     {
-        
+        return new NullMq;
     }
 }
